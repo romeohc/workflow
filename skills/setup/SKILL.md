@@ -36,9 +36,7 @@ Do not add a process this app does not run. Do not turn a concrete step into a s
 
 ## Radar
 
-If `.cursor/skills/radar/SKILL.md` already exists, leave it. Do not rewrite its prose or its script. Add a host only when this repo has one the skill does not name.
-
-If it is missing, write it with `disable-model-invocation: true`. Description: After main moves, check this tip of main on Vercel, Convex prod, Fly, public health, and GitHub CI. Copy the rules below into that skill. The skill contains one script. The agent who runs it does not rewrite it and does not look up endpoints.
+Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: After main moves, check this tip of main on Vercel, Convex prod, Fly, public health, and GitHub CI. Copy the rules below into that skill. The skill contains one script. The agent who runs it does not rewrite it and does not look up endpoints.
 
 Rules:
 
@@ -65,7 +63,7 @@ Host calls, only when that host exists. Find the names in this repo.
 
 Name a secret only for a host this app uses: `VERCEL_TOKEN`, `FLY_API_TOKEN`, `CONVEX_PROD_DEPLOY_KEY`.
 
-Then, with the automate skill, one automation named `Radar - <app name>`: push to `main` on this repo. The prompt is exactly `Use radar skill in /workspace/.cursor/skills/radar/SKILL.md. Follow this skill and reply in french.` If that automation already exists, leave it.
+Then, with the automate skill, one automation named `Radar - <app name>`: push to `main` on this repo. The prompt is exactly `Use radar skill in /workspace/.cursor/skills/radar/SKILL.md. Follow this skill and reply in french.`
 
 ## CI
 
