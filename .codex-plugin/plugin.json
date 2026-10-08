@@ -5,5 +5,10 @@
   "author": {
     "name": "romeohc"
   },
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Workflow",
+    "logo": "./assets/logo.png",
+    "composerIcon": "./assets/logo.png"
+  }
 }
