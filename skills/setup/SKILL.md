@@ -1,16 +1,24 @@
 ---
 name: setup
-description: Install this repo's workflow. Environment, local, radar, CI, deploy, and the radar automation. Skip what already matches.
+description: Install this repo's workflow. Check each piece. Send an agent for each one that is missing.
 disable-model-invocation: true
 ---
 
 # Setup
 
-Read the repo. Skip a piece that already matches. Update a piece when the app has a service it does not describe.
+You check this app against the pieces below. You do not write them yourself.
 
 Do not copy `hard`, `fast`, `debug`, `think`, or `clean` into the repo. Those are the user's Cursor skills.
 
 No app yet (no manifest and no start script): stop. Say the repo has no app. Do not invent one.
+
+## Do
+
+Read the repo. For each piece, decide if it already matches, including every service this app really has. A piece that matches: skip it. Do not send an agent.
+
+A piece that is missing, or that misses a service this app has: send one agent to put that piece in place. Send every such piece at once. Each agent owns one piece and follows only that section.
+
+You stay lead. When an agent finishes, read the files. Do not trust its summary. Then reply as below.
 
 ## Environment
 
