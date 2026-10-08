@@ -28,7 +28,9 @@ Do not add a process this app does not run. Do not turn a concrete step into a s
 
 ## Radar
 
-Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: After main moves, check this tip of main on Vercel, Convex prod, Fly, public health, and GitHub CI. The rules below are copied into that skill word for word. Only the hosts, URLs, app names, project ids, path filters, and log lines to ignore change to match this repo. The skill contains one script. The agent who runs it does not rewrite it and does not look up endpoints.
+If `.cursor/skills/radar/SKILL.md` already exists, leave it. Do not rewrite its prose or its script. Add a host only when this repo has one the skill does not name.
+
+If it is missing, write it with `disable-model-invocation: true`. Description: After main moves, check this tip of main on Vercel, Convex prod, Fly, public health, and GitHub CI. Copy the rules below into that skill. The skill contains one script. The agent who runs it does not rewrite it and does not look up endpoints.
 
 Rules:
 
@@ -39,7 +41,7 @@ Rules:
 - A real error on this tip (deploy failed, prod down, CI red, or an error in the first ~20s of logs after a new deploy of this SHA): Engineer with the debug skill if you don't know why, then one draft fix PR. Do not deploy. Prose only when you Engineer.
 - Skip the wait, never the look, when this SHA did not touch that host's paths. Read those paths from this repo. A Vercel `CANCELED` ignoreCommand is green. PR CI is not prod.
 - One page of logs is the look. Sit ~20s and read that host again only after a new deploy of this SHA just succeeded on it.
-- Ignore only log lines this repo already shows are noise. Do not copy another app's quirks.
+- Ignore only log lines this repo already shows are noise.
 
 The script, from the repo root, one run:
 
@@ -47,11 +49,11 @@ The script, from the repo root, one run:
 - Then `wait_ci`: poll until the `CI` run for this SHA is completed, or 4 minutes pass, or main moves. Print `ci_wait` and the final runs.
 - Wave 2, all at once, only what needs an id: the Vercel build log for this SHA and for the latest `READY`, the Convex log page, and a second load of the home page.
 
-Host calls, only when that host exists:
+Host calls, only when that host exists. Find the names in this repo.
 
-- Vercel. Bearer `VERCEL_TOKEN`. Resolve the project id and team id once and write them in the script. List production deployments, then events for this SHA and the latest `READY`.
-- Fly. One app name per `fly.toml`. `Authorization` is the raw `FLY_API_TOKEN` (`FlyV1`, no `Bearer`). Machines, then one log page.
-- Convex prod. `POST https://api.convex.dev/api/deployment/url_for_key` with `CONVEX_PROD_DEPLOY_KEY` inside the script. Then `GET {url}/version` and one page of `GET {url}/api/stream_function_logs?cursor=0` with header `Authorization: Convex <key>`. Never `npx convex logs`. Never write the key into `.env.local`. Never set `CONVEX_DEPLOY_KEY`.
+- Vercel, when a frontend deploys there. Bearer `VERCEL_TOKEN`. Resolve the project id and team id once and write them in the script. List production deployments, then events for this SHA and the latest `READY`.
+- Fly, one app name per `fly.toml`. `Authorization` is the raw `FLY_API_TOKEN` (`FlyV1`, no `Bearer`). Machines, then one log page.
+- Convex prod, when this repo has Convex. `POST https://api.convex.dev/api/deployment/url_for_key` with `CONVEX_PROD_DEPLOY_KEY` inside the script. Then `GET {url}/version` and one page of `GET {url}/api/stream_function_logs?cursor=0` with header `Authorization: Convex <key>`. Never `npx convex logs`. Never write the key into `.env.local`. Never set `CONVEX_DEPLOY_KEY`.
 
 Name a secret only for a host this app uses: `VERCEL_TOKEN`, `FLY_API_TOKEN`, `CONVEX_PROD_DEPLOY_KEY`.
 
