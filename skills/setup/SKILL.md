@@ -43,10 +43,10 @@ Rules, copied as is:
 - Read only while you check. This SHA of `origin/main` only. If main moved, reply `🚫` and stop.
 - Run the command once. Do not rewrite it. Do not look anything up. Its last line is the verdict.
 - `GREEN`: `✅` is the whole reply. `MOVED`: `🚫`. `MISSING <secret>`: name it and stop. `TIMEOUT`: say what is still running and stop.
-- `RED`: if the error names its cause, fix it. If not, use the debug skill. Then one draft fix PR. Do not deploy. Prose only here.
-- A red that is only noise: the fix PR adds that line to the command's filter. A 404 from a host: the fix PR updates the command.
+- `RED`: if the error names its cause, fix it. If not, use the debug skill. Then one draft fix pull request. Do not deploy. Prose only here.
+- A red that is only noise: the fix adds that line to the command's filter. A host that no longer answers the same way: the fix updates the command.
 
-Map: one line per production surface this repo really has: frontend, backend, database, workers. Each line has its name, the paths that deploy it, where its deploy status lives, its logs, its health URL, and the secret it needs. Then the GitHub checks a push to `main` starts, from this repo's workflows and hosts. Read all of it from this repo's host configs and deploy workflows. Do not add a surface this app does not run.
+Map: one line per production surface this repo really has: frontend, backend, database, workers. Each line has its name, the paths that deploy it, where its deploy status lives, its logs, its health URL, and the secret it needs. Then the CI checks a push to `main` starts on this repo's forge, if it has any. Read all of it from this repo's host configs, CI config, and deploy config. Do not add a surface or a check this app does not have.
 
 Run: one command, from the repo root, every call in parallel. It:
 
@@ -61,12 +61,6 @@ Write ids and endpoints into the command once. Secrets come from the Cursor envi
 Run the command once on the current main. It must end with a verdict and print every surface.
 
 Then, with the automate skill, one automation named `Radar - <app name>`, on push to `main` on this repo. The prompt is exactly `Use radar skill in /workspace/.cursor/skills/radar/SKILL.md. Follow this skill and reply in french.` The automation reads the skill from `main`.
-
-Known hosts, only as hints:
-
-- Fly: `Authorization` is the raw `FLY_API_TOKEN` (`FlyV1`, no `Bearer`).
-- Convex prod: `POST https://api.convex.dev/api/deployment/url_for_key` with `CONVEX_PROD_DEPLOY_KEY`, then `Authorization: Convex <key>`. Never set `CONVEX_DEPLOY_KEY`. Never write the key into `.env.local`.
-- Vercel: Bearer `VERCEL_TOKEN`. A `CANCELED` ignoreCommand is green.
 
 ## CI
 
@@ -88,7 +82,7 @@ This app already matches this skill. You changed nothing. Reply `✅`.
 
 You put pieces in place and every one worked. Reply `⚙️` and one short line per piece you added or updated. More than one line is a bullet list under that emoji. `local skill added`. Do not list what you skipped. Do not explain.
 
-Radar added: one line names each secret still missing in the Cursor environment, `radar: paste VERCEL_TOKEN`. Radar not on `main` yet: `radar: merge to main to start`.
+Radar added: one line names each secret still missing in the Cursor environment, `radar: paste <SECRET>`. Radar not on `main` yet: `radar: merge to main to start`.
 
 A piece you tried did not work. Reply in prose. Say what failed and why. This is the only time you explain.
 
