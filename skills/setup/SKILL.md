@@ -55,7 +55,7 @@ Host calls, only when that host exists:
 
 Name a secret only for a host this app uses: `VERCEL_TOKEN`, `FLY_API_TOKEN`, `CONVEX_PROD_DEPLOY_KEY`.
 
-Then, with the automate skill, one automation: push to `main` on this repo, and the prompt only runs the radar skill on that SHA. If that automation already exists, leave it.
+Then, with the automate skill, one automation named `Radar - <app name>`: push to `main` on this repo. The prompt is exactly `Use radar skill in /workspace/.cursor/skills/radar/SKILL.md. Follow this skill and reply in french.` If that automation already exists, leave it.
 
 ## CI
 
