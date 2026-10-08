@@ -34,34 +34,39 @@ Do not add a process this app does not run. Do not turn a concrete step into a s
 
 ## Radar
 
-Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: After main moves, check this tip of main on Vercel, Convex prod, Fly, public health, and GitHub CI. Copy the rules below into that skill. Write one command in that skill. The agent runs that command. It says what to launch and how. The agent does not rewrite it and does not look up endpoints.
+Skip it when this app deploys nothing to production.
 
-Rules:
+Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: after main moves, check that this tip of main is healthy in production, and fix it if not. The skill has three parts.
 
-- Read only. This SHA of `origin/main` only. Fetch and compare on every poll. If main moved, reply `🚫` and stop.
-- Check public health, each real host, and the main `push` CI run named `CI` in the same turn. Always read the latest live deploy, even if this SHA did not trigger one.
-- The `push` CI run named `CI` for this SHA must be completed and green before `✅`, even when this commit deployed nothing. The command polls it about every 20s and stops around 4 minutes. It prints `ci_wait` with the conclusion. Do not reply while that run is in progress. If it is still running at the cap, say so and stop. If `origin/main` moved while waiting, reply `🚫` and stop.
-- `✅` is the whole reply, and only when that CI run is green and every host checked is green. A missing secret: name it and stop. Do not invent `✅`.
-- A real error on this tip (deploy failed, prod down, CI red, or an error in the first ~20s of logs after a new deploy of this SHA): Engineer with the debug skill if you don't know why, then one draft fix PR. Do not deploy. Prose only when you Engineer.
-- Skip the wait, never the look, when this SHA did not touch that host's paths. Read those paths from this repo. A Vercel `CANCELED` ignoreCommand is green. PR CI is not prod.
-- One page of logs is the look. Sit ~20s and read that host again only after a new deploy of this SHA just succeeded on it.
-- Ignore only log lines this repo already shows are noise.
+Rules, copied as is:
 
-The command, from the repo root, one run:
+- Read only while you check. This SHA of `origin/main` only. If main moved, reply `🚫` and stop.
+- Run the command once. Do not rewrite it. Do not look anything up. Its last line is the verdict.
+- `GREEN`: `✅` is the whole reply. `MOVED`: `🚫`. `MISSING <secret>`: name it and stop. `TIMEOUT`: say what is still running and stop.
+- `RED`: if the error names its cause, fix it. If not, use the debug skill. Then one draft fix PR. Do not deploy. Prose only here.
+- A red that is only noise: the fix PR adds that line to the command's filter. A 404 from a host: the fix PR updates the command.
 
-- Wave 1, all at once: `origin/main` and its file list, the public health URLs, one CI snapshot, one status and one log page per host that exists.
-- Then `wait_ci`: poll until the `CI` run for this SHA is completed, or 4 minutes pass, or main moves. Print `ci_wait` and the final runs.
-- Wave 2, all at once, only what needs an id: the Vercel build log for this SHA and for the latest `READY`, the Convex log page, and a second load of the home page.
+Map: one line per production surface this repo really has: frontend, backend, database, workers. Each line has its name, the paths that deploy it, where its deploy status lives, its logs, its health URL, and the secret it needs. Then the GitHub checks a push to `main` starts, from this repo's workflows and hosts. Read all of it from this repo's host configs and deploy workflows. Do not add a surface this app does not run.
 
-Host calls, only when that host exists. Find the names in this repo.
+Run: one command, from the repo root, every call in parallel. It:
 
-- Vercel, when a frontend deploys there. Bearer `VERCEL_TOKEN`. Resolve the project id and team id once and write them in the command. List production deployments, then events for this SHA and the latest `READY`.
-- Fly, one app name per `fly.toml`. `Authorization` is the raw `FLY_API_TOKEN` (`FlyV1`, no `Bearer`). Machines, then one log page.
-- Convex prod, when this repo has Convex. `POST https://api.convex.dev/api/deployment/url_for_key` with `CONVEX_PROD_DEPLOY_KEY` inside the command. Then `GET {url}/version` and one page of `GET {url}/api/stream_function_logs?cursor=0` with header `Authorization: Convex <key>`. Never `npx convex logs`. Never write the key into `.env.local`. Never set `CONVEX_DEPLOY_KEY`.
+- fetches `origin/main`, prints the SHA and its files, and marks each surface as touched or not.
+- waits until every check in the map has started and completed on this SHA, about every 20s, and stops around 4 minutes. It stops with `MOVED` if main moves.
+- for every surface: prints live deploy status, one page of logs, and the health URL answer.
+- for a touched surface: waits for this SHA's deploy there, then waits ~20s and reads its logs again.
+- ends with one verdict line: `GREEN`, `MOVED`, `MISSING <secret>`, `TIMEOUT`, or `RED <surface> <reason>`.
 
-Name a secret only for a host this app uses: `VERCEL_TOKEN`, `FLY_API_TOKEN`, `CONVEX_PROD_DEPLOY_KEY`.
+Write ids and endpoints into the command once. Secrets come from the Cursor environment.
 
-Then, with the automate skill, one automation named `Radar - <app name>`: push to `main` on this repo. The prompt is exactly `Use radar skill in /workspace/.cursor/skills/radar/SKILL.md. Follow this skill and reply in french.`
+Run the command once on the current main. It must end with a verdict and print every surface.
+
+Then, with the automate skill, one automation named `Radar - <app name>`, on push to `main` on this repo. The prompt is exactly `Use radar skill in /workspace/.cursor/skills/radar/SKILL.md. Follow this skill and reply in french.` The automation reads the skill from `main`.
+
+Known hosts, only as hints:
+
+- Fly: `Authorization` is the raw `FLY_API_TOKEN` (`FlyV1`, no `Bearer`).
+- Convex prod: `POST https://api.convex.dev/api/deployment/url_for_key` with `CONVEX_PROD_DEPLOY_KEY`, then `Authorization: Convex <key>`. Never set `CONVEX_DEPLOY_KEY`. Never write the key into `.env.local`.
+- Vercel: Bearer `VERCEL_TOKEN`. A `CANCELED` ignoreCommand is green.
 
 ## CI
 
@@ -82,6 +87,8 @@ The whole reply is one of these.
 This app already matches this skill. You changed nothing. Reply `✅`.
 
 You put pieces in place and every one worked. Reply `⚙️` and one short line per piece you added or updated. More than one line is a bullet list under that emoji. `local skill added`. Do not list what you skipped. Do not explain.
+
+Radar added: one line names each secret still missing in the Cursor environment, `radar: paste VERCEL_TOKEN`. Radar not on `main` yet: `radar: merge to main to start`.
 
 A piece you tried did not work. Reply in prose. Say what failed and why. This is the only time you explain.
 
