@@ -28,7 +28,7 @@ Do not add a process this app does not run. Do not turn a concrete step into a s
 
 ## Radar
 
-Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. The rules below are copied into that skill word for word. Only the hosts, URLs, app names, project ids, path filters, and log lines to ignore change to match this repo. The skill contains one script. The agent who runs it does not rewrite it and does not look up endpoints.
+Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: After main moves, check this tip of main on Vercel, Convex prod, Fly, public health, and GitHub CI. The rules below are copied into that skill word for word. Only the hosts, URLs, app names, project ids, path filters, and log lines to ignore change to match this repo. The skill contains one script. The agent who runs it does not rewrite it and does not look up endpoints.
 
 Rules:
 
