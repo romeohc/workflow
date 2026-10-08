@@ -69,8 +69,14 @@ Fly, only if a `fly.toml` exists. One workflow per app, on push to `main`, path-
 
 Do not add a host the repo does not use.
 
-## After
+## Reply
 
-Reply with what you added, what you skipped, and the keys still missing in this project's Cursor environment. Only name a key this app's hosts need. The user pastes them. You do not create tokens.
+The whole reply is one of these.
 
-If no cloud environment is saved yet, say so. The user validates it in the Cursor console, then pastes the keys.
+This app already matches this skill. You changed nothing. Reply `✅`.
+
+You put pieces in place and every one worked. Reply `⚙️` and one short line per piece you added or updated. More than one line is a bullet list under that emoji. `local skill added`. Do not list what you skipped. Do not explain.
+
+A piece you tried did not work. Reply in prose. Say what failed and why. This is the only time you explain.
+
+`✅` and `⚙️` are the whole reply. Do not invent `✅` when you changed the app, or when something failed.
