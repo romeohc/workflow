@@ -1,0 +1,8 @@
+{
+  "name": "workflow",
+  "version": "1.0.0",
+  "description": "The same workflow on every app: setup, hard, fast, debug, think, and clean.",
+  "author": {
+    "name": "romeohc"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "workflow",
+  "interface": {
+    "displayName": "Workflow"
+  },
+  "plugins": [
+    {
+      "name": "workflow",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Engineering"
+    }
+  ]
+}

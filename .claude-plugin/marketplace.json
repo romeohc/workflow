@@ -1,0 +1,14 @@
+{
+  "name": "workflow",
+  "description": "The same workflow on every app.",
+  "owner": {
+    "name": "romeohc"
+  },
+  "plugins": [
+    {
+      "name": "workflow",
+      "source": "./",
+      "description": "The same workflow on every app: setup, hard, fast, debug, think, and clean."
+    }
+  ]
+}
