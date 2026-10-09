@@ -28,11 +28,12 @@ Do not add a process this app does not run. Do not turn a concrete step into a s
 
 ## Radar
 
-Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: After main moves, check that production matches main. The rules below are copied into that skill word for word.
+Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: After main moves, check that everything this app deploys matches main. The rules below are copied into that skill word for word.
 
 Rules:
 
-- You own the current `origin/main`. Read the repo and learn what this app deploys, and which tests it runs. Fetch at the start and before the verdict. If main moved, reply `🛑` and stop. That emoji is the whole reply.
+- Read the repo. The check covers every service this app deploys, and the tests it actually runs. A service the repo does not use is out.
+- You own the current `origin/main`. Fetch at the start and before the verdict. If main moved, reply `🛑` and stop. That emoji is the whole reply.
 - For each deployed service, ask which commit is live. Diff that commit with main, only on the files of that service.
 - No diff: that service already matches main. Skip it.
 - A diff: wait until that deploy is live, or it has failed. If main moves while you wait, reply `🛑` and stop.
