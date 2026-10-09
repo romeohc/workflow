@@ -28,17 +28,20 @@ Do not add a process this app does not run. Do not turn a concrete step into a s
 
 ## Radar
 
-Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: After main moves, check that everything this app deploys matches main. The rules below are copied into that skill word for word.
+Read the repo once. Learn every service this app deploys, and every test it runs. A service the repo does not use is out. Write one ready command per check, so the agent who later runs radar does not rediscover the stack.
+
+Write `.cursor/skills/radar/SKILL.md` with `disable-model-invocation: true`. Description: After main moves, check that everything this app deploys matches main.
+
+Under `Commands`, one block per service: the paths that belong to it, the command that prints the live commit, the command that prints the deploy state, the command that prints the logs since that deploy, and the public address when it has one. Then one block for the tests this app runs on main, each as a command. These commands are specific to this repo. The rules below are copied word for word.
 
 Rules:
 
-- Read the repo. The check covers every service this app deploys, and the tests it actually runs. A service the repo does not use is out.
-- You own the current `origin/main`. Fetch at the start and before the verdict. If main moved, reply `🛑` and stop. That emoji is the whole reply.
-- For each deployed service, ask which commit is live. Diff that commit with main, only on the files of that service.
+- Run the commands in this skill. You own the current `origin/main`. Fetch at the start and before the verdict. If main moved, reply `🛑` and stop. That emoji is the whole reply.
+- For each service, diff the live commit with main, only on that service's paths.
 - No diff: that service already matches main. Skip it.
 - A diff: wait until that deploy is live, or it has failed. If main moves while you wait, reply `🛑` and stop.
-- For each service that just deployed: read its logs since that deploy. Open its public address when it has one.
-- Run the tests this app has for this main.
+- For each service that just deployed: run its log command. Open its public address when the skill gives one.
+- Run the test commands for this main.
 - All of that is green: reply `✅` and stop. That emoji is the whole reply. Do not invent `✅`.
 - Something failed and the cause is clear: fix it. The cause is unknown: use the debug skill, then fix it.
 
